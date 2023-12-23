@@ -1,0 +1,58 @@
+{
+	"properties": [
+		{
+			"name": "batch.chunk-size",
+			"type": "java.lang.Integer",
+			"defaultValue": "100",
+			"description": "Default: 100, Number of items that are processed in a single transaction by a chunk-oriented step."
+		},
+		{
+			"name": "batch.skip-limit",
+			"type": "java.lang.Integer",
+			"defaultValue": "10",
+			"description": "Default: 100, Maximum number of items to skip as per configured Skip policy, exceeding which fails the job."
+		},
+		{
+			"name": "batch.max-retries",
+			"type": "java.lang.Integer",
+			"defaultValue": "3",
+			"description": "Default: 3, Maximum number of retry attempts as configured Retry policy, exceeding which fails the job."
+		},
+		{
+			"name": "batch.backoff-initial-delay",
+			"type": "java.time.Duration",
+			"defaultValue": "PT3S",
+			"description": "Default: false, Time duration (in java.time.Duration format) to wait before the first retry attempt is made after a failure."
+		},
+		{
+			"name": "batch.backoff-multiplier",
+			"type": "java.lang.Integer",
+			"defaultValue": "3",
+			"description": "Default: 3, Factor by which the delay between consecutive retries is multiplied."
+		},
+		{
+			"name": "batch.item-reader-page-size",
+			"type": "java.lang.Integer",
+			"defaultValue": "100",
+			"description": "Default: 100, Number of records to be read in each page by Paging Item readers."
+		},
+		{
+			"name": "batch.partition-size",
+			"type": "java.lang.Integer",
+			"defaultValue": "16",
+			"description": "Default: 16, Number of partitions that will be used to process the data concurrently. Should be optimized as per available machine resources."
+		},
+		{
+			"name": "batch.trigger.partitioning.threshold",
+			"type": "java.lang.Integer",
+			"defaultValue": "100",
+			"description": "Default: 100, Minimum number of records to trigger partitioning otherwise it could be counter productive to do partitioning."
+		},
+		{
+			"name": "batch.runIdSequence",
+			"type": "java.lang.String",
+			"defaultValue": "run_id_sequence",
+			"description": "Default: run_id_sequence, Run Id database sequence name"
+		}
+	]
+}
