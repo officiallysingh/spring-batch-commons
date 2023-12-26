@@ -34,7 +34,7 @@ public abstract class AbstractPartitioner
   protected abstract List<String> partitioningList();
 
   @Override
-  public final Map<String, ExecutionContext> partition(final int gridSize) {
+  public Map<String, ExecutionContext> partition(final int gridSize) {
     log.info("Grid size: " + gridSize);
     List<String> partitioningList = this.partitioningList();
 
@@ -80,7 +80,7 @@ public abstract class AbstractPartitioner
   }
 
   @Override
-  public final List<String> getPartitionNames(int gridSize) {
+  public List<String> getPartitionNames(int gridSize) {
     return IntStream.range(0, gridSize)
         .mapToObj(i -> PARTITION_NAME_PREFIX + "-" + (i + 1))
         .toList();

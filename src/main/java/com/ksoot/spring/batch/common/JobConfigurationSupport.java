@@ -17,7 +17,6 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.BackOffPolicy;
@@ -25,44 +24,22 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Slf4j
 @AutoConfigureAfter(value = {BatchConfiguration.class})
-public class PartitionedJobConfiguration<R, W> {
-
-  @Autowired private JobRepository jobRepository;
-
-  @Autowired private PlatformTransactionManager transactionManager;
-
-  @Autowired private TaskExecutor taskExecutor;
-
-  @Autowired private JobExecutionListener jobExecutionListener;
-
-  @Autowired private StepExecutionListener stepExecutionListener;
-
-  @Autowired private BackOffPolicy backOffPolicy;
-
-  @Autowired private RetryPolicy retryPolicy;
-
-  @Autowired private SkipPolicy skipPolicy;
-
-  @Autowired private ObjectProvider<SkipListener<R, W>> skipListenerProvider;
-
-  @Autowired private List<Class<? extends Throwable>> skippedExceptions;
-
-  @Autowired private JobParametersIncrementer jobParametersIncrementer;
+public abstract class JobConfigurationSupport<R, W> {
 
   @Autowired protected BatchProperties batchProperties;
+  @Autowired private JobRepository jobRepository;
 
-  protected Job newSimpleJob(
-      final String jobName,
-      final Step step,
-      final ItemReader<R> reader,
-      final ItemProcessor<R, W> processor,
-      final ItemWriter<W> writer) {
-    return new JobBuilder(jobName, this.jobRepository)
-        .incrementer(this.jobParametersIncrementer())
-        .listener(this.jobExecutionListener())
-        .start(step)
-        .build();
-  }
+  //    @Autowired
+  //    private TaskExecutor taskExecutor;
+  @Autowired private PlatformTransactionManager transactionManager;
+  @Autowired private JobExecutionListener jobExecutionListener;
+  @Autowired private StepExecutionListener stepExecutionListener;
+  @Autowired private BackOffPolicy backOffPolicy;
+  @Autowired private RetryPolicy retryPolicy;
+  @Autowired private SkipPolicy skipPolicy;
+  @Autowired private ObjectProvider<SkipListener<R, W>> skipListenerProvider;
+  @Autowired private List<Class<? extends Throwable>> skippedExceptions;
+  @Autowired private JobParametersIncrementer jobParametersIncrementer;
 
   protected Job newPartitionedJob(
       final String jobName,

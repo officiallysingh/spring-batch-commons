@@ -14,34 +14,39 @@ import org.springframework.batch.core.configuration.support.DefaultBatchConfigur
 import org.springframework.batch.core.launch.support.DataFieldMaxValueJobParametersIncrementer;
 import org.springframework.batch.core.step.skip.LimitCheckingItemSkipPolicy;
 import org.springframework.batch.core.step.skip.SkipPolicy;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.dao.RecoverableDataAccessException;
 import org.springframework.dao.TransientDataAccessException;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.support.incrementer.PostgresSequenceMaxValueIncrementer;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.backoff.BackOffPolicy;
 import org.springframework.retry.backoff.BackOffPolicyBuilder;
 import org.springframework.retry.policy.CompositeRetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.transaction.PlatformTransactionManager;
 
-@AutoConfiguration
-// @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
+@Configuration // Change this annotation to @AutoConfiguration when this class moved to lib
+@AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @EnableConfigurationProperties(value = {BatchProperties.class})
 @RequiredArgsConstructor
 public class BatchConfiguration extends DefaultBatchConfiguration {
 
-  private final TaskExecutor taskExecutor;
-
-  @Override
-  public TaskExecutor getTaskExecutor() {
-    return this.taskExecutor;
-  }
+  //    Define Async Task Executor when executing the jobs from Rest API.
+  //  private final TaskExecutor taskExecutor;
+  //
+  //  @Override
+  //  public TaskExecutor getTaskExecutor() {
+  //    return this.taskExecutor;
+  //  }
+  final DataSource dataSource;
 
   @ConditionalOnMissingBean
   @Bean
@@ -49,6 +54,11 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
       final DataSource dataSource, final BatchProperties batchProperties) {
     return new DataFieldMaxValueJobParametersIncrementer(
         new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
+  }
+
+  //  @Bean
+  public PlatformTransactionManager getTransactionManager() {
+    return new DataSourceTransactionManager(this.dataSource);
   }
 
   @ConditionalOnMissingBean
