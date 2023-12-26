@@ -33,7 +33,7 @@ import org.springframework.retry.policy.CompositeRetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.transaction.PlatformTransactionManager;
 
-@AutoConfiguration // Change this annotation to @AutoConfiguration when this class moved to lib
+@AutoConfiguration
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @EnableConfigurationProperties(value = {BatchProperties.class})
 @RequiredArgsConstructor
@@ -56,7 +56,6 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
         new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
   }
 
-  //  @Bean
   public PlatformTransactionManager getTransactionManager() {
     return new DataSourceTransactionManager(this.dataSource);
   }
