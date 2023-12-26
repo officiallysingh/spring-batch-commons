@@ -10,7 +10,7 @@
 			"name": "batch.skip-limit",
 			"type": "java.lang.Integer",
 			"defaultValue": "10",
-			"description": "Default: 100, Maximum number of items to skip as per configured Skip policy, exceeding which fails the job."
+			"description": "Default: 10, Maximum number of items to skip as per configured Skip policy, exceeding which fails the job."
 		},
 		{
 			"name": "batch.max-retries",
@@ -31,7 +31,7 @@
 			"description": "Default: 3, Factor by which the delay between consecutive retries is multiplied."
 		},
 		{
-			"name": "batch.item-reader-page-size",
+			"name": "batch.page-size",
 			"type": "java.lang.Integer",
 			"defaultValue": "100",
 			"description": "Default: 100, Number of records to be read in each page by Paging Item readers."
@@ -39,8 +39,8 @@
 		{
 			"name": "batch.partition-size",
 			"type": "java.lang.Integer",
-			"defaultValue": "16",
-			"description": "Default: 16, Number of partitions that will be used to process the data concurrently. Should be optimized as per available machine resources."
+			"defaultValue": "8",
+			"description": "Default: 8, Number of partitions that will be used to process the data concurrently. Should be optimized as per available machine resources."
 		},
 		{
 			"name": "batch.trigger.partitioning.threshold",
