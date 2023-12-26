@@ -43,13 +43,13 @@
 			"description": "Default: 8, Number of partitions that will be used to process the data concurrently. Should be optimized as per available machine resources."
 		},
 		{
-			"name": "batch.trigger.partitioning.threshold",
+			"name": "batch.trigger-partitioning-threshold",
 			"type": "java.lang.Integer",
 			"defaultValue": "100",
 			"description": "Default: 100, Minimum number of records to trigger partitioning otherwise it could be counter productive to do partitioning."
 		},
 		{
-			"name": "batch.runIdSequence",
+			"name": "batch.run-id-sequence",
 			"type": "java.lang.String",
 			"defaultValue": "run_id_sequence",
 			"description": "Default: run_id_sequence, Run Id database sequence name"
