@@ -50,7 +50,7 @@ It requires a database sequence named `run_id_sequence` to generate unique run i
 Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file.
 > [!IMPORTANT]
 You still can not restart already running job, as Spring batch does not allow that. 
-Though this behaviour can also be overridden buu not recommended.
+Though this behaviour can also be overridden but not recommended.
 ```java
 @ConditionalOnMissingBean
 @Bean
