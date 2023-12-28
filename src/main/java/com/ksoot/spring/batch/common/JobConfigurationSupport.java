@@ -45,8 +45,7 @@ public abstract class JobConfigurationSupport<R, W> {
       final String jobName,
       final ItemReader<R> reader,
       final ItemProcessor<R, W> processor,
-      final ItemWriter<W> writer)
-      throws Exception {
+      final ItemWriter<W> writer) {
     return new JobBuilder(jobName, this.jobRepository)
         .incrementer(this.jobParametersIncrementer())
         .listener(this.jobExecutionListener())

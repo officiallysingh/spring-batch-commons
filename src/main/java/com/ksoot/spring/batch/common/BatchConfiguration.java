@@ -9,17 +9,21 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.JobParametersIncrementer;
+import org.springframework.batch.core.SkipListener;
 import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.configuration.support.DefaultBatchConfiguration;
 import org.springframework.batch.core.launch.support.DataFieldMaxValueJobParametersIncrementer;
 import org.springframework.batch.core.step.skip.LimitCheckingItemSkipPolicy;
 import org.springframework.batch.core.step.skip.SkipPolicy;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.Ordered;
+import org.springframework.core.task.SyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.dao.RecoverableDataAccessException;
@@ -39,15 +43,15 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class BatchConfiguration extends DefaultBatchConfiguration {
 
-  //    Define Async Task Executor when executing the jobs from Rest API.
-  //  private final TaskExecutor taskExecutor;
-  //
-  //  @Override
-  //  public TaskExecutor getTaskExecutor() {
-  //    return this.taskExecutor;
-  //  }
+  private final ObjectProvider<TaskExecutor> taskExecutor;
 
-  final DataSource dataSource;
+  private final DataSource dataSource;
+
+//  Define Async Task Executor when executing the jobs from Rest API, to submit job asynchronously.
+  @Override
+  protected TaskExecutor getTaskExecutor() {
+    return this.taskExecutor.getIfAvailable(super::getTaskExecutor);
+  }
 
   @ConditionalOnMissingBean
   @Bean
@@ -58,7 +62,7 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   }
 
   @Override
-  public PlatformTransactionManager getTransactionManager() {
+  protected PlatformTransactionManager getTransactionManager() {
     return new DataSourceTransactionManager(this.dataSource);
   }
 
