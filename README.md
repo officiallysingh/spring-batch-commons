@@ -172,7 +172,13 @@ it could be counter productive to do partitioning, Default: 100.
 ## Usage
 
 ### Installation
-Built on Java 21, Spring boot 3.2.0+ and Spring batch 5.1.0+. For different versions, build from source.
+Built on Java 21, Spring boot 3.2.0+ and Spring batch 5.1.0+. For java version 17, build from source by changing the java version as follows.
+[**`pom.xml`**](pom.xml)
+```xml
+<properties>
+    <java.version>17</java.version>
+</properties>
+```
 
 > **Current version: 1.0**
 
