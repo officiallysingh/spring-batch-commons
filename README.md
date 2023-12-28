@@ -47,12 +47,14 @@ Each Job execution is uniquely identified by combination of its `identifying` pa
 If a job is restarted with same identifying parameters, Spring batch will throw `JobInstanceAlreadyCompleteException`. So to force restart the job,
 [`AbstractJobExecutor#execute`](https://github.com/officiallysingh/spring-batch-commons/blob/04c4a7232f5e36ace5168c498fa96690615799f8/src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java#L22)
 method adds a unique `run.id` to the job execution parameters if `forceRestart` argument is `true`.
-It requires a database sequence named `run_id_sequence` to generate unique run id.
-Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file. 
 It can be overridden by defining new `JobParametersIncrementer` bean in consumer application.
+It requires a database sequence named `run_id_sequence` to generate unique run id which can be overridden 
+by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file. 
+
 > [!IMPORTANT]
 You still can not restart already running job, as Spring batch does not allow that. 
 Though this behaviour can also be overridden but not recommended.
+
 ```java
 @ConditionalOnMissingBean
 @Bean
