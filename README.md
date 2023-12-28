@@ -9,7 +9,7 @@ Also default components can be overridden with custom implementations.
 Spring batch jobs require a lot of boilerplate code to be written, which is extracted out in this library to promote reusability.
 This library provides following default for various Spring batch components, which can be overridden with custom implementations in consumer application.
 Following are the classes provided by this library
-* [`**BatchConguration**`](src/main/java/com/example/springbatch/commons/configuration/BatchConfiguration.java) 
+* [`BatchConguration`](src/main/java/com/example/springbatch/commons/configuration/BatchConfiguration.java) 
 Extends [DefaultBatchConfiguration](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/configuration/support/DefaultBatchConfiguration.html) 
 and defines default configuration for Spring batch jobs. It is auto-configured by Spring boot.
 * [AbstractJobExecutor](src/main/java/com/example/springbatch/commons/executor/AbstractJobExecutor.java) 
