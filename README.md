@@ -1,8 +1,4 @@
-# Spring Data Auditing and Text search
+# Spring Batch common components
 
-./gradlew bootRun --args='--spring.profiles.active=docker'
-
-./gradlew --stop
-
-TBD
+To be updated soon
 
