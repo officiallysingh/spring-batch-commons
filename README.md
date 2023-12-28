@@ -48,6 +48,9 @@ If a job is restarted with same identifying parameters, Spring batch will throw 
 method adds a unique `run.id` to the job execution parameters if `forceRestart` argument is `true`.
 It requires a database sequence named `run_id_sequence` to generate unique run id.
 Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file.
+> [!IMPORTANT]
+You still can not restart already running job, as Spring batch does not allow that. 
+Though this behaviour can also be overridden buu not recommended.
 ```java
 @ConditionalOnMissingBean
 @Bean
@@ -56,4 +59,7 @@ JobParametersIncrementer jobParametersIncrementer(
     return new DataFieldMaxValueJobParametersIncrementer(
         new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
 }
+```
+```sql
+CREATE SEQUENCE IF NOT EXISTS run_id_sequence START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 ```
