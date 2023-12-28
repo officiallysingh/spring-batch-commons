@@ -1,14 +1,11 @@
 # Spring Batch common components
 
 ## Introduction
-Being a Spring component, Spring batch is also built on same philosophy of reusability and extensibility.
-Required components of a Spring batch job can be defined as Beans and can be reused across multiple jobs. 
-Default components can be overridden with configurations and custom implementations.
+Spring batch jobs may require boilerplate code to be written, which is extracted out in this library to promote reusability.
+Common components of a Spring batch job are defined as Beans and can be reused across multiple jobs. 
 
 ## Classes
-Spring batch jobs require a lot of boilerplate code to be written, which is extracted out in this library to promote reusability.
-This library provides following default for various Spring batch components, which can be overridden with custom implementations in consumer application.
-Following are the classes provided by this library
+Following are the classes provided by this library.
 * [`BatchConguration`](src/main/java/com/example/springbatch/commons/configuration/BatchConfiguration.java) 
 Extends [`DefaultBatchConfiguration`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/configuration/support/DefaultBatchConfiguration.html) 
 and defines default configuration for Spring batch jobs. It is auto-configured by Spring boot.
@@ -39,7 +36,8 @@ Custom exception to represent skipped records in Spring batch jobs. Default impl
 Spring boot configuration property class to read batch properties from `application.properties` or `application.yml` file.
 
 ## Auto-configured Components
-Following are the components auto-configured as Beans by Spring boot.
+Following are the components, auto-configured as Beans by Spring boot with opinionated default behaviour.
+The defaults can be customized by configurations and custom implementations in consumer application.
 
 * [`JobParametersIncrementer`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/JobParametersIncrementer.html) 
 to generate unique run id for each job execution in case of force restarting already successfully completed jobs.
