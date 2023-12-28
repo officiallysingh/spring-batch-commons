@@ -42,18 +42,18 @@ Spring boot configuration property class to read batch properties from `applicat
 Following are the components auto-configured as Beans by Spring boot.
 * [`JobParametersIncrementer`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/JobParametersIncrementer.html) 
 to generate unique run id for each job execution in case of force restarting already successfully completed jobs.
+Each Job execution is uniquely identified by combination of its `identifying` parameters.
+If a job is restarted with same identifying parameters, Spring batch will throw `JobInstanceAlreadyCompleteException`. So to force restart the job,
+[`AbstractJobExecutor#execute`](https://github.com/officiallysingh/spring-batch-commons/blob/04c4a7232f5e36ace5168c498fa96690615799f8/src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java#L22)
+method adds a unique `run.id` to the job execution parameters if `forceRestart` argument is `true`.
+It requires a database sequence named `run_id_sequence` to generate unique run id.
+Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file.
 ```java
 @ConditionalOnMissingBean
 @Bean
 JobParametersIncrementer jobParametersIncrementer(
   final DataSource dataSource, final BatchProperties batchProperties) {
-return new DataFieldMaxValueJobParametersIncrementer(
-    new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
+    return new DataFieldMaxValueJobParametersIncrementer(
+        new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
 }
 ```
-Each Job execution is uniquely identified by combination of its `identifying` parameters.
-If a job is restarted with same identifying parameters, Spring batch will throw `JobInstanceAlreadyCompleteException`. So to force restart the job,
-[`AbstractJobExecutor#execute`](https://github.com/officiallysingh/spring-batch-commons/blob/04c4a7232f5e36ace5168c498fa96690615799f8/src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java#L22)
-method adds a unique `run.id` to the job execution parameters if `forceRestart` argument is `true`. 
-It requires a database sequence named `run_id_sequence` to generate unique run id. 
-Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file.
