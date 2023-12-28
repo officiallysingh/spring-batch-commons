@@ -238,11 +238,12 @@ Refer to example [`AccountsPartitioner`](https://github.com/officiallysingh/spri
 Otherwise, all records are processed in a single partition.
 * Define a Job executor bean by extending [`AbstractJobExecutor`](src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java) to execute the job. 
 Refer to example [`StatementJobExecutor`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobExecutor.java).
+* Define a [`SkipListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/SkipListener.html) bean to handle skipped records.
+Refer to example [`StatementJobSkipListener`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobSkipListener.java).
 
 ## Author
 [**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
 ## References
-* Refer to [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) 
-  as example to see usage
-* For exception handling refer to [**`spring-boot-problem-handler`**](https://github.com/officiallysingh/spring-boot-problem-handler)
+* Refer to demo application [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) to see usage.
+* For exception handling refer to [**`spring-boot-problem-handler`**](https://github.com/officiallysingh/spring-boot-problem-handler).
