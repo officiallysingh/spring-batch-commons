@@ -30,7 +30,7 @@ Custom Mongo Paging Item reader using aggregation pipeline and pagination.
 Custom Mongo Item writer for upsert operation.
 * [`ListFlattenerKafkaItemWriter`](src/main/java/com/example/springbatch/commons/writer/ListFlattenerKafkaItemWriter.java) 
 Custom Kafka writer to write a `List` of items to kafka. 
-* Can be used in cases where the last `Processor` return a List of items, instead of a single item.
+Can be used in cases where the last `Processor` return a List of items, instead of a single item.
 * [`StepStatus`](src/main/java/com/example/springbatch/commons/util/StepStatus.java) 
 Utility Class to define custom Step status, can be enhanced to add more statuses.
 * [`SkipRecordException`](src/main/java/com/example/springbatch/commons/exception/SkipRecordException.java) 
