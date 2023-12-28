@@ -46,6 +46,7 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   //  public TaskExecutor getTaskExecutor() {
   //    return this.taskExecutor;
   //  }
+
   final DataSource dataSource;
 
   @ConditionalOnMissingBean
@@ -56,6 +57,7 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
         new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
   }
 
+  @Override
   public PlatformTransactionManager getTransactionManager() {
     return new DataSourceTransactionManager(this.dataSource);
   }

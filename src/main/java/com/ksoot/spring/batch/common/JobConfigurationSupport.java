@@ -41,6 +41,19 @@ public abstract class JobConfigurationSupport<R, W> {
   @Autowired private List<Class<? extends Throwable>> skippedExceptions;
   @Autowired private JobParametersIncrementer jobParametersIncrementer;
 
+  protected Job newSimpleJob(
+      final String jobName,
+      final ItemReader<R> reader,
+      final ItemProcessor<R, W> processor,
+      final ItemWriter<W> writer)
+      throws Exception {
+    return new JobBuilder(jobName, this.jobRepository)
+        .incrementer(this.jobParametersIncrementer())
+        .listener(this.jobExecutionListener())
+        .start(newStep(jobName, reader, processor, writer))
+        .build();
+  }
+
   protected Job newPartitionedJob(
       final String jobName,
       final Partitioner partitioner,

@@ -12,7 +12,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
 
 @RequiredArgsConstructor
-public class ListFlattenerKafkaWriter<K, T>
+public class ListFlattenerKafkaItemWriter<K, T>
     implements ItemWriter<List<T>>, ItemStream, InitializingBean {
 
   private final KafkaItemWriter<K, T> delegate;

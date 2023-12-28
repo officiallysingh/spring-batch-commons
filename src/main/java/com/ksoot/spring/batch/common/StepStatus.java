@@ -1,16 +1,14 @@
 package com.ksoot.spring.batch.common;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.util.Assert;
 
+@UtilityClass
 public class StepStatus {
 
   public static final ExitStatus COMPLETED_WITH_SKIPS =
       new ExitStatus("COMPLETED_WITH_SKIPS", "Completed with skips");
-
-  private StepStatus() {
-    throw new AssertionError("Static helper class. Not supposed to be instantiated");
-  }
 
   public static ExitStatus unknown() {
     return ExitStatus.UNKNOWN;
@@ -46,7 +44,7 @@ public class StepStatus {
     return new ExitStatus(code);
   }
 
-  public static boolean isCompletedWithSkips(ExitStatus exitStatus) {
+  public static boolean isCompletedWithSkips(final ExitStatus exitStatus) {
     return exitStatus.getExitCode().equals(COMPLETED_WITH_SKIPS.getExitCode());
   }
 
