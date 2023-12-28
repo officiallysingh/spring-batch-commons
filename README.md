@@ -194,7 +194,7 @@ implementation 'io.github.officiallysingh:spring-batch-commons:1.0'
 ### Define Jobs
 Define jobs as Beans by extending [`JobConfigurationSupport`](src/main/java/com/example/springbatch/commons/configuration/JobConfigurationSupport.java) class.
 Default configurations can be overridden for a particular `Job` by overriding respective methods. To override default beans, define new bean with same name in consumer application.
-Refer to [`StatementJobConfiguration`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobConfiguration.java)
+Refer to example [`StatementJobConfiguration`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobConfiguration.java)
 * Define `ItemReader`, `ItemProcessor` and `ItemWriter` beans for each job.
 * To define a simple job, use `simpleJob` method in `JobConfigurationSupport` and return a `Job` bean.
 ```java
@@ -232,10 +232,17 @@ Job statementJob(
 * Partitioned jobs also require a partitioner bean to define partitioning strategy. 
 Define a `Partitioner` bean to be defined by extending [`AbstractPartitioner`](src/main/java/com/example/springbatch/commons/partitioner/AbstractPartitioner.java)
 and overriding `partitioningList` method to return `List` of partitioning candidate `String`s.
-Refer to [`AccountsPartitioner`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/AccountsPartitioner.java).
+Refer to example [`AccountsPartitioner`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/AccountsPartitioner.java).
 > [!NOTE]
 > Multiple partitions are created only when total numbers of records returned by `partitioningList` method are greater than `batch.trigger-partitioning-threshold` property.
 Otherwise, all records are processed in a single partition.
 * Define a Job executor bean by extending [`AbstractJobExecutor`](src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java) to execute the job. 
-Refer to [`StatementJobExecutor`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobExecutor.java).
+Refer to example [`StatementJobExecutor`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobExecutor.java).
 
+## Author
+[**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
+
+## References
+* Refer to [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) 
+  as example to see usage
+* For exception handling refer to [**`spring-boot-problem-handler`**](https://github.com/officiallysingh/spring-boot-problem-handler)
