@@ -124,8 +124,8 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
 
   @ConditionalOnMissingBean
   @Bean
-  StepExecutionListener stepExecutionListener() {
-    return new LoggingStepListener();
+  List<Class<? extends Throwable>> skippedExceptions() {
+    return List.of(ConstraintViolationException.class, SkipRecordException.class);
   }
 
   @ConditionalOnMissingBean
@@ -136,7 +136,7 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
 
   @ConditionalOnMissingBean
   @Bean
-  List<Class<? extends Throwable>> skippedExceptions() {
-    return List.of(ConstraintViolationException.class, SkipRecordException.class);
+  StepExecutionListener stepExecutionListener() {
+    return new LoggingStepListener();
   }
 }

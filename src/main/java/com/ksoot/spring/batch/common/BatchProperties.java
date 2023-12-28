@@ -74,6 +74,6 @@ public class BatchProperties {
   @Min(1)
   private int triggerPartitioningThreshold = 100;
 
-  /** Default: run_id_sequence, Run Id database sequence name */
+  /** Default: run_id_sequence, Run Id database sequence name. */
   @NotEmpty private String runIdSequence = "run_id_sequence";
 }

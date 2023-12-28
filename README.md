@@ -3,7 +3,7 @@
 ## Introduction
 Being a Spring component, Spring batch is also built on same philosophy of reusability and extensibility.
 Required components of a Spring batch job can be defined as Beans and can be reused across multiple jobs. 
-Also default components can be overridden with custom implementations.
+Default components can be overridden with configurations and custom implementations.
 
 ## Classes
 Spring batch jobs require a lot of boilerplate code to be written, which is extracted out in this library to promote reusability.
@@ -40,6 +40,7 @@ Spring boot configuration property class to read batch properties from `applicat
 
 ## Auto-configured Components
 Following are the components auto-configured as Beans by Spring boot.
+
 * [`JobParametersIncrementer`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/JobParametersIncrementer.html) 
 to generate unique run id for each job execution in case of force restarting already successfully completed jobs.
 Each Job execution is uniquely identified by combination of its `identifying` parameters.
@@ -47,7 +48,8 @@ If a job is restarted with same identifying parameters, Spring batch will throw 
 [`AbstractJobExecutor#execute`](https://github.com/officiallysingh/spring-batch-commons/blob/04c4a7232f5e36ace5168c498fa96690615799f8/src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java#L22)
 method adds a unique `run.id` to the job execution parameters if `forceRestart` argument is `true`.
 It requires a database sequence named `run_id_sequence` to generate unique run id.
-Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file.
+Sequence name can be overridden by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file. 
+It can be overridden by defining new `JobParametersIncrementer` bean in consumer application.
 > [!IMPORTANT]
 You still can not restart already running job, as Spring batch does not allow that. 
 Though this behaviour can also be overridden but not recommended.
@@ -63,3 +65,177 @@ JobParametersIncrementer jobParametersIncrementer(
 ```sql
 CREATE SEQUENCE IF NOT EXISTS run_id_sequence START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 ```
+
+* [`BackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/retry/backoff/BackOffPolicy.html)
+to define back off policy for retrying failed steps. Default is [`ExponentialBackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/retry/backoff/ExponentialBackOffPolicy.html)
+Backoff delay and multiplier can be customized by setting `batch.backoff-initial-delay` and `batch.backoff-multiplier` properties in `application.properties` or `application.yml` file.
+It can be overridden by defining new `BackOffPolicy` bean in consumer application.
+```java
+@ConditionalOnMissingBean
+@Bean
+BackOffPolicy backOffPolicy(final BatchProperties batchProperties) {
+    return BackOffPolicyBuilder.newBuilder()
+        .delay(batchProperties.getBackoffInitialDelay().toMillis())
+        .multiplier(batchProperties.getBackoffMultiplier())
+        .build();
+}
+```
+
+* [`RetryPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/retry/policy/RetryPolicy.html)
+to define retry policy for retrying failed steps. By default, it retries for `TransientDataAccessException` and `RecoverableDataAccessException` exceptions for JPA and Mongo DB.
+It works in conjunction with `BackOffPolicy`.
+It can be overridden by defining new `RetryPolicy` bean in consumer application 
+and customized by setting `batch.retry-max-attempts` property in `application.properties` or `application.yml` file.
+```java
+@ConditionalOnMissingBean
+@Bean
+RetryPolicy retryPolicy(final BatchProperties batchProperties) {
+    CompositeRetryPolicy retryPolicy = new CompositeRetryPolicy();
+    retryPolicy.setPolicies(
+        ArrayUtils.toArray(
+            this.noRetryPolicy(batchProperties), this.daoRetryPolicy(batchProperties)));
+    return retryPolicy;
+}
+```
+
+* [`SkipPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/step/skip/SkipPolicy.html)
+to define skip policy for skipping records in case of exceptions. By default, it skips `ConstraintViolationException` and `SkipRecordException`.
+It can be customized by setting `batch.skip-limit` property in `application.properties` or `application.yml` file.
+It can be defined as [AlwaysSkipItemSkipPolicy](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/step/skip/AlwaysSkipItemSkipPolicy.html) 
+to skip all records in case of any exception. 
+Skipped exceptions must also be specified in noRollback in Step configuration which is handled by this library automatically. 
+It can be overridden by defining new `SkipPolicy` bean in consumer application. Similarly `skippedExceptions` can also be overridden. 
+```java
+@ConditionalOnMissingBean
+@Bean
+SkipPolicy skipPolicy(final BatchProperties batchProperties) {
+    Map<Class<? extends Throwable>, Boolean> exceptionClassifiers =
+        this.skippedExceptions().stream().collect(Collectors.toMap(ex -> ex, ex -> Boolean.TRUE));
+    return new LimitCheckingItemSkipPolicy(batchProperties.getSkipLimit(), exceptionClassifiers);
+}
+
+@ConditionalOnMissingBean
+@Bean
+List<Class<? extends Throwable>> skippedExceptions() {
+    return List.of(ConstraintViolationException.class, SkipRecordException.class);
+}
+```
+
+* [`JobExecutionListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/listener/JobExecutionListener.html) 
+default implementation as [`LoggingJobListener`](src/main/java/com/example/springbatch/commons/listener/LoggingJobListener.java)
+which does nothing but logging only. It can be overridden by defining new `JobExecutionListener` bean in consumer application.
+```java
+@ConditionalOnMissingBean
+@Bean
+JobExecutionListener jobExecutionListener() {
+    return new LoggingJobListener();
+}
+```
+
+* [`StepExecutionListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/StepExecutionListener.html) 
+default implementation as [`LoggingStepListener`](src/main/java/com/example/springbatch/commons/listener/LoggingStepListener.java) 
+which does nothing but logging only. It can be overridden by defining new `StepExecutionListener` bean in consumer application.
+```java
+@ConditionalOnMissingBean
+@Bean
+StepExecutionListener stepExecutionListener() {
+    return new LoggingStepListener();
+}
+```
+
+## Configurations
+Following are the configuration properties to customize default Spring batch behaviour.
+```yaml
+batch:
+  chunk-size: 100
+  skip-limit: 10
+  max-retries: 3
+  backoff-initial-delay: PT3S
+  backoff-multiplier: 2
+  page-size: 300
+  partition-size: 16
+  trigger-partitioning-threshold: 100
+```
+
+* **`batch.chunk-size`** : Number of items that are processed in a single transaction by a chunk-oriented step, Default: 100.
+* **`batch.skip-limit`** : Maximum number of items to skip as per configured Skip policy, exceeding which fails the job, Default: 10.
+* **`batch.max-retries`** : Maximum number of retry attempts as configured Retry policy, exceeding which fails the job, Default: 3.
+* **`batch.backoff-initial-delay`** : Time duration (in java.time.Duration format) to wait before the first retry attempt is made after a failure, Default: false.
+* **`batch.backoff-multiplier`** : Factor by which the delay between consecutive retries is multiplied, Default: 3.
+* **`batch.page-size`** : Number of records to be read in each page by Paging Item readers, Default: 100.
+* **`batch.partition-size`** : Number of partitions that will be used to process the data concurrently. 
+Should be optimized as per available machine resources, Default: 8.
+* **`batch.trigger-partitioning-threshold`** : Minimum number of records to trigger partitioning otherwise 
+it could be counter productive to do partitioning, Default: 100.
+* **`batch.run-id-sequence`** : Run Id database sequence name, Default: run_id_sequence.
+
+## Usage
+Following are the steps to use this library in consumer application.
+
+### Installation
+Built on Java 21, Spring boot 3.2.0+ and Spring batch 5.1.0+. For different versions, build from source.
+
+> **Current version: 1.0**
+
+Add the `spring-batch-commons` jar to application dependencies. 
+
+Maven
+```xml
+<dependency>
+    <groupId>io.github.officiallysingh</groupId>
+    <artifactId>spring-batch-commons</artifactId>
+    <version>1.0</version>
+</dependency>
+```
+Gradle
+```groovy
+implementation 'io.github.officiallysingh:spring-batch-commons:1.0'
+```
+
+### Define Jobs
+Define jobs as Beans by extending [`JobConfigurationSupport`](src/main/java/com/example/springbatch/commons/configuration/JobConfigurationSupport.java) class.
+Refer to [`StatementJobConfiguration`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobConfiguration.java)
+* Define `ItemReader`, `ItemProcessor` and `ItemWriter` beans for each job.
+* To define a simple job, use `simpleJob` method in `JobConfigurationSupport` and return a `Job` bean.
+```java
+@Bean
+Job statementJob(
+    final ItemReader<DailyTransaction> transactionReader,
+    final ItemProcessor<DailyTransaction, Statement> statementProcessor,
+    final ItemWriter<Statement> statementWriter) {
+  return newSimpleJob(
+      AppConstants.STATEMENT_JOB_NAME,
+      transactionReader,
+      statementProcessor,
+      statementWriter);
+}
+```
+
+* To define a partitioned job, use `partitionedJob` method in `JobConfigurationSupport` and return a `Job` bean.
+```java
+@Bean
+Job statementJob(
+    @Qualifier("statementJobPartitioner") final AccountsPartitioner statementJobPartitioner,
+    final ItemReader<DailyTransaction> transactionReader,
+    final ItemProcessor<DailyTransaction, Statement> statementProcessor,
+    final ItemWriter<Statement> statementWriter)
+    throws Exception {
+  return newPartitionedJob(
+      AppConstants.STATEMENT_JOB_NAME,
+      statementJobPartitioner,
+      transactionReader,
+      statementProcessor,
+      statementWriter);
+}
+```
+
+* Partitioned jobs also require a partitioner bean to define partitioning strategy. 
+Define a `Partitioner` bean to be defined by extending [`AbstractPartitioner`](src/main/java/com/example/springbatch/commons/partitioner/AbstractPartitioner.java)
+and overriding `partitioningList` method to return `List` of partitioning candidate `String`s.
+Refer to [`AccountsPartitioner`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/AccountsPartitioner.java).
+> [!NOTE]
+> Multiple partitions are created only when total numbers of records returned by `partitioningList` method are greater than `batch.trigger-partitioning-threshold` property.
+Otherwise, all records are processed in a single partition.
+* Define a Job executor bean by extending [`AbstractJobExecutor`](src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java) to execute the job. 
+Refer to [`StatementJobExecutor`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobExecutor.java).
+
