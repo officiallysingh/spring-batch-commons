@@ -178,7 +178,7 @@ batch:
 Should be optimized as per available machine resources, Default: 8.
 * **`batch.trigger-partitioning-threshold`** : Minimum number of records to trigger partitioning otherwise 
 it could be counter productive to do partitioning, Default: 100.
-* **`batch.run-id-sequence`** : Run Id database sequence name, Default: run_id_sequence.
+* **`batch.run-id-sequence`** : Run Id database sequence name, Default: `run_id_sequence`.
 
 ## Usage
 
