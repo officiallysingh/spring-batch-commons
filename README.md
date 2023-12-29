@@ -266,6 +266,10 @@ Refer to example [`StatementJobExecutor`](https://github.com/officiallysingh/spr
 Yoy may want to save skipped records in a separate collection or table and retry later.
 Refer to example [`StatementJobSkipListener`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobSkipListener.java).
 
+> [!IMPORTANT]
+Any component needing access to `stepExecutionContext` must be defined as `@StepScope` bean 
+and to access `jobParameters` or `jobExecutionContext` must be defined as `@JobScope` bean
+
 ## Author
 [**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
