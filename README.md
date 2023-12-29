@@ -262,7 +262,8 @@ Refer to example [`AccountsPartitioner`](https://github.com/officiallysingh/spri
 Otherwise, all records are processed in a single partition.
 * Define a Job executor bean by extending [`AbstractJobExecutor`](src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java) to execute the job. 
 Refer to example [`StatementJobExecutor`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobExecutor.java).
-* Define a [`SkipListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/SkipListener.html) bean to handle skipped records.
+* Define a [`SkipListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/SkipListener.html) bean to handle skipped records. 
+Yoy may want to save skipped records in a separate collection or table and retry later.
 Refer to example [`StatementJobSkipListener`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobSkipListener.java).
 
 ## Author
