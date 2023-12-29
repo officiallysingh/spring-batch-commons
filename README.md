@@ -166,6 +166,8 @@ batch:
   page-size: 300
   partition-size: 16
   trigger-partitioning-threshold: 100
+#  task-executor: applicationTaskExecutor
+#  run-id-sequence: run_id_sequence
 ```
 
 * **`batch.chunk-size`** : Number of items that are processed in a single transaction by a chunk-oriented step, Default: 100.
@@ -178,6 +180,9 @@ batch:
 Should be optimized as per available machine resources, Default: 8.
 * **`batch.trigger-partitioning-threshold`** : Minimum number of records to trigger partitioning otherwise 
 it could be counter productive to do partitioning, Default: 100.
+* **`batch.task-executor`** : Bean name of the Task Executor to be used for executing the jobs. By default `SyncTaskExecutor` is used. 
+Set to `applicationTaskExecutor` to use `SimpleAsyncTaskExecutor` provided by Spring. 
+Or use any other custom `TaskExecutor` and set the bean name here. Don't set this property in Spring cloud task but Spring Rest applications.
 * **`batch.run-id-sequence`** : Run Id database sequence name, Default: `run_id_sequence`.
 
 ## Usage
@@ -264,6 +269,7 @@ Refer to example [`StatementJobSkipListener`](https://github.com/officiallysingh
 [**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
 ## References
-* Refer to demo application [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) 
-to see usage in Job implemented as Spring cloud task.
+* Refer to Spring Batch Job implemented as Spring Cloud Task [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task).
+* Refer to Spring Batch Job implemented as Spring Rest application [**`spring-boot-batch-web`**](https://github.com/officiallysingh/spring-boot-batch-web).
 * For exception handling refer to [**`spring-boot-problem-handler`**](https://github.com/officiallysingh/spring-boot-problem-handler).
+* For Spring Data MongoDB Audit logging refer to [**`spring-boot-mongodb-auditing`**](https://github.com/officiallysingh/spring-boot-mongodb-auditing).

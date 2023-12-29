@@ -75,10 +75,10 @@ public class BatchProperties {
   private int triggerPartitioningThreshold = 100;
 
   /**
-   * Bean name of the Task Executor to be used for executing the jobs.
-   * By default <code>SyncTaskExecutor</code> is used. Set to <code>applicationTaskExecutor</code>
-   * to use <code>SimpleAsyncTaskExecutor</code> provided by Spring.
-   * Or use any other custom <code>TaskExecutor</code> and set the bean name here.
+   * Bean name of the Task Executor to be used for executing the jobs. By default <code>
+   * SyncTaskExecutor</code> is used. Set to <code>applicationTaskExecutor</code> to use <code>
+   * SimpleAsyncTaskExecutor</code> provided by Spring. Or use any other custom <code>TaskExecutor
+   * </code> and set the bean name here.
    */
   private String taskExecutor;
 

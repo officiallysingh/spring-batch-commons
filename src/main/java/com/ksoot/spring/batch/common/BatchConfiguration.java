@@ -3,7 +3,6 @@ package com.ksoot.spring.batch.common;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +15,6 @@ import org.springframework.batch.core.configuration.support.DefaultBatchConfigur
 import org.springframework.batch.core.launch.support.DataFieldMaxValueJobParametersIncrementer;
 import org.springframework.batch.core.step.skip.LimitCheckingItemSkipPolicy;
 import org.springframework.batch.core.step.skip.SkipPolicy;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -46,12 +44,14 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   private final DataSource dataSource;
 
   private final BatchProperties batchProperties;
+
   //  Define Async Task Executor when executing the jobs from Rest API, to submit job
   // asynchronously.
   @Override
   protected TaskExecutor getTaskExecutor() {
-    if(StringUtils.isNotBlank(this.batchProperties.getTaskExecutor())) {
-      return this.applicationContext.getBean(this.batchProperties.getTaskExecutor(), TaskExecutor.class);
+    if (StringUtils.isNotBlank(this.batchProperties.getTaskExecutor())) {
+      return this.applicationContext.getBean(
+          this.batchProperties.getTaskExecutor(), TaskExecutor.class);
     } else {
       return super.getTaskExecutor();
     }
@@ -61,7 +61,8 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   @Bean
   JobParametersIncrementer jobParametersIncrementer() {
     return new DataFieldMaxValueJobParametersIncrementer(
-        new PostgresSequenceMaxValueIncrementer(this.dataSource, this.batchProperties.getRunIdSequence()));
+        new PostgresSequenceMaxValueIncrementer(
+            this.dataSource, this.batchProperties.getRunIdSequence()));
   }
 
   @Override
@@ -82,9 +83,7 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   @Bean
   RetryPolicy retryPolicy() {
     CompositeRetryPolicy retryPolicy = new CompositeRetryPolicy();
-    retryPolicy.setPolicies(
-        ArrayUtils.toArray(
-            this.noRetryPolicy(), this.daoRetryPolicy()));
+    retryPolicy.setPolicies(ArrayUtils.toArray(this.noRetryPolicy(), this.daoRetryPolicy()));
     return retryPolicy;
   }
 
@@ -96,7 +95,7 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
 
   private RetryPolicy daoRetryPolicy() {
     return new SimpleRetryPolicy(
-            this.batchProperties.getMaxRetries(),
+        this.batchProperties.getMaxRetries(),
         Map.of(
             TransientDataAccessException.class,
             true,
@@ -122,7 +121,8 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   SkipPolicy skipPolicy() {
     Map<Class<? extends Throwable>, Boolean> exceptionClassifiers =
         this.skippedExceptions().stream().collect(Collectors.toMap(ex -> ex, ex -> Boolean.TRUE));
-    return new LimitCheckingItemSkipPolicy(this.batchProperties.getSkipLimit(), exceptionClassifiers);
+    return new LimitCheckingItemSkipPolicy(
+        this.batchProperties.getSkipLimit(), exceptionClassifiers);
   }
 
   @ConditionalOnMissingBean

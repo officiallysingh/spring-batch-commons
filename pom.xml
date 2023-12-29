@@ -6,7 +6,7 @@
 
     <groupId>io.github.officiallysingh</groupId>
     <artifactId>spring-batch-commons</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>1.0</version>
     <name>spring-batch-commons</name>
     <description>Spring batch common components to create partitioned jobs</description>
     <url>https://github.com/officiallysingh/spring-batch-commons</url>
