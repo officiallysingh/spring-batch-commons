@@ -92,7 +92,7 @@ BackOffPolicy backOffPolicy(final BatchProperties batchProperties) {
 }
 ```
 
-* [`RetryPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/retry/RetryPolicy.html)
+* [`RetryPolicy`](https://docs.spring.io/spring-retry/docs/api/current/org/springframework/retry/RetryPolicy.html)
 to define retry policy for retrying failed steps. By default, it retries for `TransientDataAccessException` and `RecoverableDataAccessException` exceptions for JPA and Mongo DB.
 It works in conjunction with `BackOffPolicy`.
 It can be overridden by defining new `RetryPolicy` bean in consumer application 
