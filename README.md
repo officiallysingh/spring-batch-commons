@@ -77,8 +77,8 @@ JobParametersIncrementer jobParametersIncrementer(
 CREATE SEQUENCE IF NOT EXISTS run_id_sequence START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 ```
 
-* [`BackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/retry/backoff/BackOffPolicy.html)
-to define back off policy for retrying failed steps. Default is [`ExponentialBackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/retry/backoff/ExponentialBackOffPolicy.html)
+* [`BackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/retry/backoff/BackOffPolicy.html)
+to define back off policy for retrying failed steps. Default is [`ExponentialBackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/retry/backoff/ExponentialBackOffPolicy.html)
 Backoff delay and multiplier can be customized by setting `batch.backoff-initial-delay` and `batch.backoff-multiplier` properties in `application.properties` or `application.yml` file.
 It can be overridden by defining new `BackOffPolicy` bean in consumer application.
 ```java
@@ -92,7 +92,7 @@ BackOffPolicy backOffPolicy(final BatchProperties batchProperties) {
 }
 ```
 
-* [`RetryPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/retry/policy/RetryPolicy.html)
+* [`RetryPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/retry/RetryPolicy.html)
 to define retry policy for retrying failed steps. By default, it retries for `TransientDataAccessException` and `RecoverableDataAccessException` exceptions for JPA and Mongo DB.
 It works in conjunction with `BackOffPolicy`.
 It can be overridden by defining new `RetryPolicy` bean in consumer application 
