@@ -77,8 +77,8 @@ JobParametersIncrementer jobParametersIncrementer(
 CREATE SEQUENCE IF NOT EXISTS run_id_sequence START WITH 1 INCREMENT BY 1 NO MINVALUE NO MAXVALUE CACHE 1;
 ```
 
-* [`BackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/retry/backoff/BackOffPolicy.html)
-to define back off policy for retrying failed steps. Default is [`ExponentialBackOffPolicy`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/retry/backoff/ExponentialBackOffPolicy.html)
+* [`BackOffPolicy`](https://docs.spring.io/spring-batch/docs/api/current/org/springframework/retry/backoff/BackOffPolicy.html)
+to define back off policy for retrying failed steps. Default is [`ExponentialBackOffPolicy`](https://docs.spring.io/spring-batch/docs/api/current/org/springframework/retry/backoff/ExponentialBackOffPolicy.html)
 Backoff delay and multiplier can be customized by setting `batch.backoff-initial-delay` and `batch.backoff-multiplier` properties in `application.properties` or `application.yml` file.
 It can be overridden by defining new `BackOffPolicy` bean in consumer application.
 ```java
