@@ -169,6 +169,14 @@ Should be optimized as per available machine resources, Default: 8.
 it could be counter productive to do partitioning, Default: 100.
 * **`batch.run-id-sequence`** : Run Id database sequence name, Default: run_id_sequence.
 
+## Features
+* Provides common components and utility classes to easily create Spring batch jobs.
+* Provides opinionated default configurations for Spring batch jobs.
+* Auto-configures fault tolerance with intelligent defaults to retry and recover for transient failure.
+* The records are processed in batch, if the job fails midway, 
+it can be restarted from the last failed batch without re processing already processed records.
+* Supports force restarting already completed jobs.
+
 ## Usage
 
 ### Installation
@@ -199,7 +207,9 @@ implementation 'io.github.officiallysingh:spring-batch-commons:1.0'
 
 ### Define Jobs
 Define jobs as Beans by extending [`JobConfigurationSupport`](src/main/java/com/example/springbatch/commons/configuration/JobConfigurationSupport.java) class.
-Default configurations can be overridden for a particular `Job` by overriding respective methods. To override default beans, define new bean with same name in consumer application.
+Default configurations can be overridden for a particular `Job` by overriding respective methods from `JobConfigurationSupport` 
+such as `retryPolicy`, `skipPolicy` etc. 
+To override default beans globally, define new bean with same name in consumer application.
 Refer to example [`StatementJobConfiguration`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/StatementJobConfiguration.java)
 * Define `ItemReader`, `ItemProcessor` and `ItemWriter` beans for each job.
 * To define a simple job, use `simpleJob` method in `JobConfigurationSupport` and return a `Job` bean.
