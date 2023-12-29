@@ -132,7 +132,7 @@ List<Class<? extends Throwable>> skippedExceptions() {
 }
 ```
 
-* [`JobExecutionListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/listener/JobExecutionListener.html) 
+* [`JobExecutionListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/JobExecutionListener.html) 
 default implementation as [`LoggingJobListener`](src/main/java/com/ksoot/spring/batch/common/LoggingJobListener.java)
 which does nothing but logging only. It can be overridden by defining new `JobExecutionListener` bean in consumer application.
 ```java
