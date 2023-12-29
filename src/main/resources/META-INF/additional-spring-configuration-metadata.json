@@ -49,6 +49,11 @@
 			"description": "Default: 100, Minimum number of records to trigger partitioning otherwise it could be counter productive to do partitioning."
 		},
 		{
+			"name": "batch.task-executor",
+			"type": "java.lang.String",
+			"description": "Bean name of the Task Executor to be used for executing the jobs. By default <code>SyncTaskExecutor</code> is used. Set to <code>applicationTaskExecutor</code> to use <code>SimpleAsyncTaskExecutor</code> provided by Spring. Or use any other custom <code>TaskExecutor</code> and set the bean name here."
+		},
+		{
 			"name": "batch.run-id-sequence",
 			"type": "java.lang.String",
 			"defaultValue": "run_id_sequence",

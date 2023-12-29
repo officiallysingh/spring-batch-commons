@@ -17,33 +17,33 @@ Common components of a Spring batch job are defined as Beans and can be reused a
 
 ## Classes
 Following are the classes provided by this library.
-* [`BatchConguration`](src/main/java/com/example/springbatch/commons/configuration/BatchConfiguration.java) 
+* [`BatchConguration`](src/main/java/com/ksoot/spring/batch/common/BatchConfiguration.java) 
 Extends [`DefaultBatchConfiguration`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/configuration/support/DefaultBatchConfiguration.html) 
 and defines default configuration for Spring batch jobs. It is auto-configured by Spring boot.
-* [`AbstractJobExecutor`](src/main/java/com/example/springbatch/commons/executor/AbstractJobExecutor.java) 
+* [`AbstractJobExecutor`](src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java) 
 Extendable by consumer application Job executor to execute job with **Run Id Incrementer** to force restart the job in case it was successfully completed in last execution.
-* [`AbstractPartitioner`](src/main/java/com/example/springbatch/commons/partitioner/AbstractPartitioner.java) Provides common implementation for partitioning Spring batch jobs. 
+* [`AbstractPartitioner`](src/main/java/com/ksoot/spring/batch/common/AbstractPartitioner.java) Provides common implementation for partitioning Spring batch jobs. 
 Consumer applications need to extend this class and provide implementation for **`partitioningList`** method to return `List` of partitioning candidate `String`s.
-* [`JobConfigurationSupport`](src/main/java/com/example/springbatch/commons/configuration/JobConfigurationSupport.java) 
+* [`JobConfigurationSupport`](src/main/java/com/ksoot/spring/batch/common/JobConfigurationSupport.java) 
 Extendable by consumer application to define new Simple and Partitioned jobs with default configurations. 
 The defaults can be overridden per job by consumer applications by overriding respective methods. 
 Or default can be overridden globally in consumer application by defining new bean for respective component.
-* [`LoggingJobListener`](src/main/java/com/example/springbatch/commons/listener/LoggingJobListener.java) 
+* [`LoggingJobListener`](src/main/java/com/ksoot/spring/batch/common/LoggingJobListener.java) 
 Provides default implementation for Spring batch job listener, which does nothing but logging only.
-* [`LoggingStepListener`](src/main/java/com/example/springbatch/commons/listener/LoggingStepListener.java) 
+* [`LoggingStepListener`](src/main/java/com/ksoot/spring/batch/common/LoggingStepListener.java) 
 Provides default implementation for Spring batch step listeners, which does nothing but logging only.
-* [`MongoAggregationPagingItemReader`](src/main/java/com/example/springbatch/commons/reader/MongoAggregationPagingItemReader.java) 
+* [`MongoAggregationPagingItemReader`](src/main/java/com/ksoot/spring/batch/common/MongoAggregationPagingItemReader.java) 
 Custom Mongo Paging Item reader using aggregation pipeline and pagination.
-* [`MongoUpsertItemWriter`](src/main/java/com/example/springbatch/commons/writer/MongoUpsertItemWriter.java) 
+* [`MongoUpsertItemWriter`](src/main/java/com/ksoot/spring/batch/common/MongoUpsertItemWriter.java) 
 Custom Mongo Item writer for upsert operation.
-* [`ListFlattenerKafkaItemWriter`](src/main/java/com/example/springbatch/commons/writer/ListFlattenerKafkaItemWriter.java) 
+* [`ListFlattenerKafkaItemWriter`](src/main/java/com/ksoot/spring/batch/common/ListFlattenerKafkaItemWriter.java) 
 Custom Kafka writer to write a `List` of items to kafka. 
 Can be used in cases where the last `Processor` return a List of items, instead of a single item.
-* [`StepStatus`](src/main/java/com/example/springbatch/commons/util/StepStatus.java) 
+* [`StepStatus`](src/main/java/com/ksoot/spring/batch/common/StepStatus.java) 
 Utility Class to define custom Step status, can be enhanced to add more statuses.
-* [`SkipRecordException`](src/main/java/com/example/springbatch/commons/exception/SkipRecordException.java) 
+* [`SkipRecordException`](src/main/java/com/ksoot/spring/batch/common/SkipRecordException.java) 
 Custom exception to represent skipped records in Spring batch jobs. Default implementation of `SkipPolicy` includes this exception.
-* [`BatchProperties`](src/main/java/com/example/springbatch/commons/util/BatchProperties.java) 
+* [`BatchProperties`](src/main/java/com/ksoot/spring/batch/common/BatchProperties.java) 
 Spring boot configuration property class to read batch properties from `application.properties` or `application.yml` file.
 
 ## Auto-configured Components
@@ -133,7 +133,7 @@ List<Class<? extends Throwable>> skippedExceptions() {
 ```
 
 * [`JobExecutionListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/listener/JobExecutionListener.html) 
-default implementation as [`LoggingJobListener`](src/main/java/com/example/springbatch/commons/listener/LoggingJobListener.java)
+default implementation as [`LoggingJobListener`](src/main/java/com/ksoot/spring/batch/common/LoggingJobListener.java)
 which does nothing but logging only. It can be overridden by defining new `JobExecutionListener` bean in consumer application.
 ```java
 @ConditionalOnMissingBean
@@ -144,7 +144,7 @@ JobExecutionListener jobExecutionListener() {
 ```
 
 * [`StepExecutionListener`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/StepExecutionListener.html) 
-default implementation as [`LoggingStepListener`](src/main/java/com/example/springbatch/commons/listener/LoggingStepListener.java) 
+default implementation as [`LoggingStepListener`](src/main/java/com/ksoot/spring/batch/common/LoggingStepListener.java) 
 which does nothing but logging only. It can be overridden by defining new `StepExecutionListener` bean in consumer application.
 ```java
 @ConditionalOnMissingBean
@@ -209,7 +209,7 @@ implementation 'io.github.officiallysingh:spring-batch-commons:1.0'
 ```
 
 ### Define Jobs
-Define jobs as Beans by extending [`JobConfigurationSupport`](src/main/java/com/example/springbatch/commons/configuration/JobConfigurationSupport.java) class.
+Define jobs as Beans by extending [`JobConfigurationSupport`](src/main/java/com/ksoot/spring/batch/common/JobConfigurationSupport.java) class.
 Default configurations can be overridden for a particular `Job` by overriding respective methods from `JobConfigurationSupport` 
 such as `retryPolicy`, `skipPolicy` etc. 
 To override default beans globally, define new bean with same name in consumer application.
@@ -249,7 +249,7 @@ Job statementJob(
 ```
 
 * Partitioned jobs also require a partitioner bean to define partitioning strategy. 
-Define a `Partitioner` bean to be defined by extending [`AbstractPartitioner`](src/main/java/com/example/springbatch/commons/partitioner/AbstractPartitioner.java)
+Define a `Partitioner` bean to be defined by extending [`AbstractPartitioner`](src/main/java/com/ksoot/spring/batch/common/AbstractPartitioner.java)
 and overriding `partitioningList` method to return `List` of partitioning candidate `String`s.
 Refer to example [`AccountsPartitioner`](https://github.com/officiallysingh/spring-boot-batch-cloud-task/blob/main/src/main/java/com/ksoot/batch/job/AccountsPartitioner.java).
 > [!NOTE]
@@ -264,5 +264,6 @@ Refer to example [`StatementJobSkipListener`](https://github.com/officiallysingh
 [**Rajveer Singh**](https://www.linkedin.com/in/rajveer-singh-589b3950/), In case you find any issues or need any support, please email me at raj14.1984@gmail.com
 
 ## References
-* Refer to demo application [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) to see usage.
+* Refer to demo application [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) 
+to see usage in Job implemented as Spring cloud task.
 * For exception handling refer to [**`spring-boot-problem-handler`**](https://github.com/officiallysingh/spring-boot-problem-handler).

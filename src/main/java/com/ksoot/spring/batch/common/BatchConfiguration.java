@@ -3,10 +3,12 @@ package com.ksoot.spring.batch.common;
 import jakarta.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executor;
 import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.JobParametersIncrementer;
 import org.springframework.batch.core.StepExecutionListener;
@@ -41,23 +43,25 @@ import org.springframework.transaction.PlatformTransactionManager;
 @RequiredArgsConstructor
 public class BatchConfiguration extends DefaultBatchConfiguration {
 
-//  private final ObjectProvider<TaskExecutor> taskExecutor;
-
   private final DataSource dataSource;
 
+  private final BatchProperties batchProperties;
   //  Define Async Task Executor when executing the jobs from Rest API, to submit job
   // asynchronously.
-//  @Override
-//  protected TaskExecutor getTaskExecutor() {
-//    return this.taskExecutor.getIfAvailable(super::getTaskExecutor);
-//  }
+  @Override
+  protected TaskExecutor getTaskExecutor() {
+    if(StringUtils.isNotBlank(this.batchProperties.getTaskExecutor())) {
+      return this.applicationContext.getBean(this.batchProperties.getTaskExecutor(), TaskExecutor.class);
+    } else {
+      return super.getTaskExecutor();
+    }
+  }
 
   @ConditionalOnMissingBean
   @Bean
-  JobParametersIncrementer jobParametersIncrementer(
-      final DataSource dataSource, final BatchProperties batchProperties) {
+  JobParametersIncrementer jobParametersIncrementer() {
     return new DataFieldMaxValueJobParametersIncrementer(
-        new PostgresSequenceMaxValueIncrementer(dataSource, batchProperties.getRunIdSequence()));
+        new PostgresSequenceMaxValueIncrementer(this.dataSource, this.batchProperties.getRunIdSequence()));
   }
 
   @Override
@@ -67,32 +71,32 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
 
   @ConditionalOnMissingBean
   @Bean
-  BackOffPolicy backOffPolicy(final BatchProperties batchProperties) {
+  BackOffPolicy backOffPolicy() {
     return BackOffPolicyBuilder.newBuilder()
-        .delay(batchProperties.getBackoffInitialDelay().toMillis())
-        .multiplier(batchProperties.getBackoffMultiplier())
+        .delay(this.batchProperties.getBackoffInitialDelay().toMillis())
+        .multiplier(this.batchProperties.getBackoffMultiplier())
         .build();
   }
 
   @ConditionalOnMissingBean
   @Bean
-  RetryPolicy retryPolicy(final BatchProperties batchProperties) {
+  RetryPolicy retryPolicy() {
     CompositeRetryPolicy retryPolicy = new CompositeRetryPolicy();
     retryPolicy.setPolicies(
         ArrayUtils.toArray(
-            this.noRetryPolicy(batchProperties), this.daoRetryPolicy(batchProperties)));
+            this.noRetryPolicy(), this.daoRetryPolicy()));
     return retryPolicy;
   }
 
-  private RetryPolicy noRetryPolicy(final BatchProperties batchProperties) {
+  private RetryPolicy noRetryPolicy() {
     Map<Class<? extends Throwable>, Boolean> exceptionClassifiers =
         this.skippedExceptions().stream().collect(Collectors.toMap(ex -> ex, ex -> Boolean.FALSE));
-    return new SimpleRetryPolicy(batchProperties.getMaxRetries(), exceptionClassifiers, false);
+    return new SimpleRetryPolicy(this.batchProperties.getMaxRetries(), exceptionClassifiers, false);
   }
 
-  private RetryPolicy daoRetryPolicy(final BatchProperties batchProperties) {
+  private RetryPolicy daoRetryPolicy() {
     return new SimpleRetryPolicy(
-        batchProperties.getMaxRetries(),
+            this.batchProperties.getMaxRetries(),
         Map.of(
             TransientDataAccessException.class,
             true,
@@ -115,10 +119,10 @@ public class BatchConfiguration extends DefaultBatchConfiguration {
   // Skipped exceptions must also be specified in noRollback in Step configuration
   @ConditionalOnMissingBean
   @Bean
-  SkipPolicy skipPolicy(final BatchProperties batchProperties) {
+  SkipPolicy skipPolicy() {
     Map<Class<? extends Throwable>, Boolean> exceptionClassifiers =
         this.skippedExceptions().stream().collect(Collectors.toMap(ex -> ex, ex -> Boolean.TRUE));
-    return new LimitCheckingItemSkipPolicy(batchProperties.getSkipLimit(), exceptionClassifiers);
+    return new LimitCheckingItemSkipPolicy(this.batchProperties.getSkipLimit(), exceptionClassifiers);
   }
 
   @ConditionalOnMissingBean
