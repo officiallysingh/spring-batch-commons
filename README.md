@@ -4,6 +4,17 @@
 Spring batch jobs may require boilerplate code to be written, which is extracted out in this library to promote reusability.
 Common components of a Spring batch job are defined as Beans and can be reused across multiple jobs. 
 
+## Features
+* Provides common components and utility classes to easily create Spring batch jobs.
+* Provides opinionated default configurations for Spring batch jobs.
+* Supports partitioning of jobs to process data concurrently.
+* Auto-configures fault tolerance with intelligent defaults to retry and recover for transient failure.
+* The records are processed in batch, if the job fails midway,
+  it can be restarted from the last failed batch without re processing already processed records.
+* Supports force restarting already completed jobs.
+* Supports skipping records in case of exceptions.
+* Supports logging of job and step execution events.
+
 ## Classes
 Following are the classes provided by this library.
 * [`BatchConguration`](src/main/java/com/example/springbatch/commons/configuration/BatchConfiguration.java) 
@@ -168,14 +179,6 @@ Should be optimized as per available machine resources, Default: 8.
 * **`batch.trigger-partitioning-threshold`** : Minimum number of records to trigger partitioning otherwise 
 it could be counter productive to do partitioning, Default: 100.
 * **`batch.run-id-sequence`** : Run Id database sequence name, Default: run_id_sequence.
-
-## Features
-* Provides common components and utility classes to easily create Spring batch jobs.
-* Provides opinionated default configurations for Spring batch jobs.
-* Auto-configures fault tolerance with intelligent defaults to retry and recover for transient failure.
-* The records are processed in batch, if the job fails midway, 
-it can be restarted from the last failed batch without re processing already processed records.
-* Supports force restarting already completed jobs.
 
 ## Usage
 
