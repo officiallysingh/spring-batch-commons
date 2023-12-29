@@ -277,4 +277,4 @@ and to access `jobParameters` or `jobExecutionContext` must be defined as `@JobS
 * Refer to Spring Batch Job implemented as Spring Cloud Task [**`spring-boot-batch-cloud-task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task).
 * Refer to Spring Batch Job implemented as Spring Rest application [**`spring-boot-batch-web`**](https://github.com/officiallysingh/spring-boot-batch-web).
 * For exception handling refer to [**`spring-boot-problem-handler`**](https://github.com/officiallysingh/spring-boot-problem-handler).
-* For Spring Data MongoDB Audit logging refer to [**`spring-boot-mongodb-auditing`**](https://github.com/officiallysingh/spring-boot-mongodb-auditing).
+* For Spring Data MongoDB Auditing refer to [**`spring-boot-mongodb-auditing`**](https://github.com/officiallysingh/spring-boot-mongodb-auditing).
