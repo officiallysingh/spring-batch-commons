@@ -6,7 +6,7 @@ from various data sources (files, databases, messaging middleware, and so on).
 Spring Batch is great at doing this and provides the necessary foundation to meet the stringent requirements of batch applications.
 It provides mechanisms for common tasks such as **task orchestration**, **partitioning**, and **restart**.
 
-![String Batch Architecture](https://github.com/officiallysingh/spring-batch-commons/blob/main/Spring%20Batch.jpg)
+![String Batch Architecture](https://github.com/officiallysingh/spring-batch-commons/blob/main/Spring_Batch.jpg)
 
 ## Introduction
 Spring batch jobs may require boilerplate code to be written, which is extracted out in this library to promote reusability.
