@@ -1,5 +1,13 @@
 # Spring Batch common components
 
+[**Spring Batch**](https://docs.spring.io/spring-batch/reference/index.html) is a battle tested Java framework that makes it easy to write batch applications.
+Batch applications involve reliably and efficiently processing large volumes of data to and
+from various data sources (files, databases, messaging middleware, and so on).
+Spring Batch is great at doing this and provides the necessary foundation to meet the stringent requirements of batch applications.
+It provides mechanisms for common tasks such as **task orchestration**, **partitioning**, and **restart**.
+
+![String Batch Architecture](https://github.com/officiallysingh/spring-batch-commons/blob/main/Spring%20Batch.jpg)
+
 ## Introduction
 Spring batch jobs may require boilerplate code to be written, which is extracted out in this library to promote reusability.
 Common components of a Spring batch job are defined as Beans and can be reused across multiple jobs. 
