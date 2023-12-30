@@ -69,7 +69,7 @@ It requires a database sequence named `run_id_sequence` to generate unique run i
 by setting `batch.run-id-sequence` property in `application.properties` or `application.yml` file. 
 
 > [!IMPORTANT]
-You still can not restart already running job, as Spring batch does not allow that. 
+Already running job can not be restarted, as Spring batch does not allow that. 
 Though this behaviour can also be overridden but not recommended.
 
 ```java
