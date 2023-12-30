@@ -17,8 +17,8 @@ Common components of a Spring batch job are defined as Beans and can be reused a
 * Provides opinionated default configurations for Spring batch jobs.
 * Supports partitioning of jobs to process data concurrently.
 * Auto-configures fault tolerance with intelligent defaults to retry and recover for transient failure.
-* The records are processed in batch, if the job fails midway,
-  it can be restarted from the last failed batch without re processing already processed records.
+* The records are processed in chunks, if the job fails midway,
+  it can be restarted from the last failed chunk without re processing already processed records.
 * Supports force restarting already completed jobs.
 * Supports skipping records in case of exceptions.
 * Supports logging of job and step execution events.
