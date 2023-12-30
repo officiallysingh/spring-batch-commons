@@ -27,7 +27,7 @@ Common components of a Spring batch job are defined as Beans and can be reused a
 Following are the classes provided by this library.
 * [`BatchConguration`](src/main/java/com/ksoot/spring/batch/common/BatchConfiguration.java) 
 Extends [`DefaultBatchConfiguration`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/configuration/support/DefaultBatchConfiguration.html) 
-and defines default configuration for Spring batch jobs. It is auto-configured by Spring boot.
+and defines default configuration for Spring batch jobs. It is autoconfigured by Spring boot.
 * [`AbstractJobExecutor`](src/main/java/com/ksoot/spring/batch/common/AbstractJobExecutor.java) 
 Extendable by consumer application Job executor to execute job with **Run Id Incrementer** to force restart the job in case it was successfully completed in last execution.
 * [`AbstractPartitioner`](src/main/java/com/ksoot/spring/batch/common/AbstractPartitioner.java) Provides common implementation for partitioning Spring batch jobs. 
@@ -54,8 +54,8 @@ Custom exception to represent skipped records in Spring batch jobs. Default impl
 * [`BatchProperties`](src/main/java/com/ksoot/spring/batch/common/BatchProperties.java) 
 Spring boot configuration property class to read batch properties from `application.properties` or `application.yml` file.
 
-## Auto-configured Components
-Following are the components, auto-configured as Beans by Spring boot with opinionated default behaviour.
+## Autoconfigured Components
+Following are the components, autoconfigured as Beans by Spring boot with opinionated default behaviour.
 The defaults can be customized by configurations and custom implementations in consumer application.
 
 * [`JobParametersIncrementer`](https://docs.spring.io/spring-batch/docs/current/api/org/springframework/batch/core/JobParametersIncrementer.html) 
