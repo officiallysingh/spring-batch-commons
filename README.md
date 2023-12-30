@@ -11,6 +11,8 @@ It provides mechanisms for common tasks such as **task orchestration**, **partit
 ## Introduction
 Spring batch jobs may require boilerplate code to be written, which is extracted out in this library to promote reusability.
 Common components of a Spring batch job are defined as Beans and can be reused across multiple jobs. 
+See usage in Spring Batch Job implemented as [**`Spring Cloud Task`**](https://github.com/officiallysingh/spring-boot-batch-cloud-task) 
+and [**`Spring Rest service`**](https://github.com/officiallysingh/spring-boot-batch-web).
 
 ## Features
 * Provides common components and utility classes to easily create Spring batch jobs.
