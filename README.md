@@ -195,6 +195,9 @@ Set to `applicationTaskExecutor` to use `SimpleAsyncTaskExecutor` provided by Sp
 Or use any other custom `TaskExecutor` and set the bean name here. Don't set this property in Spring cloud task but Spring Rest applications.
 * **`batch.run-id-sequence`** : Run Id database sequence name, Default: `run_id_sequence`.
 
+> [!IMPORTANT]
+To take benefit from Java 21 Virtual threads with Spring boot 3.2 define a [**`VirtualThreadTaskExecutor`**](https://spring.io/blog/2023/11/23/spring-batch-5-1-ga-5-0-4-and-4-3-10-available-now/#virtual-threads-support) and configure the name as `batch.task-executor`.
+
 ## Usage
 
 ### Installation
